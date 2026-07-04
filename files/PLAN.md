@@ -20,12 +20,12 @@ Checkpoint baseline for every phase: `npm run typecheck && npm run test && npm r
 
 ## Phase 1 — Data core (DB, seed, domain math + tests)
 
-- [ ] `src/types` domain types per SPEC §3
-- [ ] Dexie schema v1, `migrations.ts` upgrade scaffold, `exportAll()/importAll()`
-- [ ] Repositories for every table; components/features never import Dexie
-- [ ] Seed loader (runs once): foods (SPEC §4.1 exactly), exercises (§4.2), split templates (§4.3), habits, quotes (30), achievements, mission/challenge definitions
-- [ ] `src/lib`: dates (`toDayKey`, week ranges Mon-start), BMI, macro aggregation (grams → macros incl. piece-based foods), streaks, XP ledger + `threshold(n)` level curve, e1RM (Epley), analytics scores (§5.10), goalHistory resolver (§5.9)
-- [ ] Vitest: streak edges (gap, month boundary, today unlogged), macro math (piece + per-100 + per-100ml), XP idempotency, level thresholds, score formulas, goalHistory day resolution
+- [x] `src/types` domain types per SPEC §3
+- [x] Dexie schema v1, `migrations.ts` upgrade scaffold, `exportAll()/importAll()`
+- [x] Repositories for every table; components/features never import Dexie
+- [x] Seed loader (runs once): foods (SPEC §4.1 exactly), exercises (§4.2), split templates (§4.3), habits, quotes (30), achievements, mission/challenge definitions
+- [x] `src/lib`: dates (`toDayKey`, week ranges Mon-start), BMI, macro aggregation (grams → macros incl. piece-based foods), streaks, XP ledger + `threshold(n)` level curve, e1RM (Epley), analytics scores (§5.10), goalHistory resolver (§5.9)
+- [x] Vitest: streak edges (gap, month boundary, today unlogged), macro math (piece + per-100 + per-100ml), XP idempotency, level thresholds, score formulas, goalHistory day resolution
 
 **Checkpoint:** baseline; all lib tests green.
 **Accept:** fresh DB seeds exactly once; `exportAll()` returns full JSON.
@@ -117,6 +117,14 @@ _Append one line per judgment call: date — decision — reason._
 - 2026-07-04 — Phase 0 quick-add sheet actions navigate to each action's host screen (Meal→Nutrition, Water→Home, Weight→Progress, Workout→Workout) — real forms arrive with Phases 3–4; keeps "no dead buttons".
 - 2026-07-04 — "More" sub-screens routed under `/more/*` — keeps the More tab active state correct on sub-screens.
 - 2026-07-04 — App project rooted at `D:\Gym` with spec docs kept in `files/` — docs were delivered there; repo covers both.
+- 2026-07-04 — `goalHistory` added as a Dexie table — SPEC §5.9 mandates the append log even though §3's table list doesn't name it.
+- 2026-07-04 — Definitions without §3 tables (split templates, quotes, achievements, mission/challenge defs) ship as static `src/data` modules; DB seeding (foods/exercises/habits/settings) runs in Dexie's `populate` event, which fires exactly once per database creation.
+- 2026-07-04 — String primary keys: seed rows use stable slugs (`food-rice`, `ex-bench-press`) so split templates and export dumps reference them safely; user rows use `crypto.randomUUID()`.
+- 2026-07-04 — For piece-unit foods, `per100` holds the SPEC §4.1 per-piece base values verbatim (with `pieceGrams`); macro lib scales by pieces — avoids normalizing to invented per-100 numbers.
+- 2026-07-04 — devDependency `fake-indexeddb` added — needed to unit-test Dexie seeding/idempotency; test-only.
+- 2026-07-04 — Exercise `equipment` labels (barbell/dumbbell/cable/machine/bodyweight) chosen; SPEC defines the field but not the values.
+- 2026-07-04 — PPL/UL/FB day defaults picked from §4.2 pools (group exercises + 1 core; second weekly visit varies movements); editable later per §4.3.
+- 2026-07-04 — `weightGainRatePerWeek` regresses only full 7-day rolling windows (partial ramp-in windows would flatten the slope); callers pass leading context days.
 
 ## DoD verification (fill in Phase 8)
 

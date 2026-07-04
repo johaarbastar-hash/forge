@@ -30,6 +30,28 @@ export default tseslint.config(
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/ban-ts-comment': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', ignoreRestSiblings: true },
+      ],
+    },
+  },
+  {
+    // Dexie stays behind the repository seam (CLAUDE.md architecture rule).
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/db/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'dexie',
+              message: 'Import Dexie only inside src/db — features go through repositories.',
+            },
+          ],
+        },
+      ],
     },
   },
 );
