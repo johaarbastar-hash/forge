@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-bg font-sans text-text antialiased;
+  }
+  #root {
+    min-height: 100dvh;
+  }
+}
+
+@layer components {
+  .metric {
+    @apply font-display tabular-nums;
+  }
+  .glass {
+    @apply border-white/10 bg-white/5 backdrop-blur-xl;
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
