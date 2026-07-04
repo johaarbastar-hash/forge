@@ -32,10 +32,10 @@ Checkpoint baseline for every phase: `npm run typecheck && npm run test && npm r
 
 ## Phase 2 — Onboarding, Profile, Goals
 
-- [ ] 5-step wizard (SPEC §5.1) with RHF + zod validation, progress indicator, back/next
-- [ ] Goal suggestions (formulas per §5.1) shown editable with "suggestion, not medical advice" label
-- [ ] Profile screen (view/edit all fields, BMI "reference only"); Goals screen with visual progress per goal; edits append to goalHistory
-- [ ] Route guard: not onboarded → wizard
+- [x] 5-step wizard (SPEC §5.1) with RHF + zod validation, progress indicator, back/next
+- [x] Goal suggestions (formulas per §5.1) shown editable with "suggestion, not medical advice" label
+- [x] Profile screen (view/edit all fields, BMI "reference only"); Goals screen with visual progress per goal; edits append to goalHistory
+- [x] Route guard: not onboarded → wizard
 
 **Checkpoint:** baseline.
 **Accept:** fresh install → wizard → dashboard skeleton shows name, BMI, goals; reload persists; goal edit affects today forward only (verified via a test on goalHistory).
@@ -125,6 +125,11 @@ _Append one line per judgment call: date — decision — reason._
 - 2026-07-04 — Exercise `equipment` labels (barbell/dumbbell/cable/machine/bodyweight) chosen; SPEC defines the field but not the values.
 - 2026-07-04 — PPL/UL/FB day defaults picked from §4.2 pools (group exercises + 1 core; second weekly visit varies movements); editable later per §4.3.
 - 2026-07-04 — `weightGainRatePerWeek` regresses only full 7-day rolling windows (partial ramp-in windows would flatten the slope); callers pass leading context days.
+- 2026-07-04 — Dependency `@hookform/resolvers` added — the standard bridge for CLAUDE.md's mandated "RHF + zod resolvers"; both base libraries are on the approved list.
+- 2026-07-04 — Mifflin-St Jeor uses the +5 (male) constant — SPEC §3 has no sex field and the single-user app targets a teenage gym-goer; suggestions stay editable and labeled.
+- 2026-07-04 — Wizard step 5 recomputes suggestions on entry but never overwrites fields the user already edited (RHF dirtyFields).
+- 2026-07-04 — Onboarding is a full-screen route outside the tab shell; guards: fresh → `/onboarding`, onboarded visiting `/onboarding` → `/`.
+- 2026-07-04 — zod v4 installed (latest): number validation uses the v4 `error` param instead of v3's `invalid_type_error`.
 
 ## DoD verification (fill in Phase 8)
 
