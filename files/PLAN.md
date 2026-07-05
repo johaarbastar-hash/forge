@@ -42,10 +42,10 @@ Checkpoint baseline for every phase: `npm run typecheck && npm run test && npm r
 
 ## Phase 3 — Nutrition + Food database
 
-- [ ] Food DB screen: search, favorites filter, custom-food CRUD (per-100 g / per-100 ml / per-piece), edit seed foods
-- [ ] Meal logging flow (§5.3): category → search/recents/favorites → serving/gram stepper → running totals → save
-- [ ] Meal CRUD: edit, delete, duplicate (today/another day); favorite meal combos; recents (last 15 distinct foods)
-- [ ] Dashboard: Forge Ring (calories) + protein/carbs/fat/fiber bars live via useLiveQuery; PROTEIN_GOAL_HIT XP wired
+- [x] Food DB screen: search, favorites filter, custom-food CRUD (per-100 g / per-100 ml / per-piece), edit seed foods
+- [x] Meal logging flow (§5.3): category → search/recents/favorites → serving/gram stepper → running totals → save
+- [x] Meal CRUD: edit, delete, duplicate (today/another day); favorite meal combos; recents (last 15 distinct foods)
+- [x] Dashboard: Forge Ring (calories) + protein/carbs/fat/fiber bars live via useLiveQuery; PROTEIN_GOAL_HIT XP wired
 
 **Checkpoint:** baseline.
 **Accept:** logging a recent meal ≤ 3 taps; displayed macros match `lib` aggregator (spot-check vs a unit test case); deleting a meal updates ring instantly.
@@ -130,6 +130,11 @@ _Append one line per judgment call: date — decision — reason._
 - 2026-07-04 — Wizard step 5 recomputes suggestions on entry but never overwrites fields the user already edited (RHF dirtyFields).
 - 2026-07-04 — Onboarding is a full-screen route outside the tab shell; guards: fresh → `/onboarding`, onboarded visiting `/onboarding` → `/`.
 - 2026-07-04 — zod v4 installed (latest): number validation uses the v4 `error` param instead of v3's `invalid_type_error`.
+- 2026-07-05 — Added `favoriteMeals` table via a real schema v2 migration (SPEC §5.3 needs named combos; §3 lists no table). Export schemaVersion is now 2; existing data upgrades in place, no re-seed. Validates the migration scaffold end-to-end.
+- 2026-07-05 — PROTEIN_GOAL_HIT awarded by `evaluateProteinGoal(dayKey)` (composes goals+meals+xp repos), called after each meal write; evaluated against the goal active that day (goalHistory); idempotent, never revoked on delete.
+- 2026-07-05 — Macro bars for carbs/fat/fiber scale relative to the largest of the three (SPEC gives no targets for them); only protein tracks against a real goal.
+- 2026-07-05 — Meal builder auto-opens the Recents tab when any history exists, making a recent-meal log a 3-tap flow (open → recent food → save); favorite combos log in 1 tap from the Quick-log row.
+- 2026-07-05 — Meal builder models one row per food (tap a food to toggle it in/out), then adjusts quantity; piece foods stepped in whole pieces, g/ml foods in 10-unit steps.
 
 ## DoD verification (fill in Phase 8)
 

@@ -5,6 +5,7 @@ import type {
   AchievementUnlock,
   DayNote,
   Exercise,
+  FavoriteMeal,
   Food,
   GoalHistoryEntry,
   Goals,
@@ -30,6 +31,7 @@ export class ForgeDB extends Dexie {
   goalHistory!: Table<GoalHistoryEntry, string>;
   foods!: Table<Food, string>;
   meals!: Table<Meal, string>;
+  favoriteMeals!: Table<FavoriteMeal, string>;
   waterLogs!: Table<WaterLog, string>;
   sleepLogs!: Table<SleepLog, string>;
   weightLogs!: Table<WeightLog, string>;

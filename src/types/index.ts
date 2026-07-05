@@ -77,6 +77,13 @@ export type Meal = Entity & {
   time: string; // HH:mm local
 };
 
+/** Saved named combo, loggable in a couple of taps (SPEC §5.3). No §3 table — added in schema v2. */
+export type FavoriteMeal = Entity & {
+  name: string;
+  category: MealCategory;
+  items: MealItem[];
+};
+
 export type WaterLog = Entity & { dayKey: DayKey; ml: number; time: string };
 
 export type SleepLog = Entity & { dayKey: DayKey; hours: number; bedtime?: string };

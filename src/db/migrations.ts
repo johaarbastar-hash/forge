@@ -26,5 +26,8 @@ export function applyMigrations(db: Dexie): void {
     settings: 'id',
   });
 
-  // future: db.version(2).stores({...}).upgrade(tx => {...})
+  // v2: favorite meal combos (SPEC §5.3). Existing tables carry over unchanged.
+  db.version(2).stores({
+    favoriteMeals: 'id, name',
+  });
 }

@@ -14,6 +14,7 @@ import { bmi } from '../../lib/bmi';
 import { quoteForDay } from '../../lib/quotes';
 import { quotes } from '../../data/quotes';
 import { todayKey } from '../../lib/dates';
+import { MacroBars } from '../nutrition/MacroBars';
 
 function greeting(hour: number): string {
   if (hour < 5) return 'Late night';
@@ -39,17 +40,28 @@ export function HomeScreen() {
       mealsByDay(today),
       latestWeight(),
     ]);
+    const macros = meals.reduce(
+      (acc, m) => ({
+        kcal: acc.kcal + m.cachedMacros.kcal,
+        proteinG: acc.proteinG + m.cachedMacros.proteinG,
+        carbsG: acc.carbsG + m.cachedMacros.carbsG,
+        fatG: acc.fatG + m.cachedMacros.fatG,
+        fiberG: acc.fiberG + m.cachedMacros.fiberG,
+      }),
+      { kcal: 0, proteinG: 0, carbsG: 0, fatG: 0, fiberG: 0 },
+    );
     return {
       profile: profile ?? null,
       goals: goals ?? null,
-      kcalToday: meals.reduce((s, m) => s + m.cachedMacros.kcal, 0),
+      macros,
       currentKg: weight?.kg ?? profile?.startWeightKg ?? null,
     };
   }, [today]);
 
   const name = data?.profile?.name;
   const goals = data?.goals ?? null;
-  const kcalToday = data?.kcalToday ?? 0;
+  const macros = data?.macros ?? { kcal: 0, proteinG: 0, carbsG: 0, fatG: 0, fiberG: 0 };
+  const kcalToday = macros.kcal;
   const bmiValue =
     data?.currentKg != null && data.profile ? bmi(data.currentKg, data.profile.heightCm) : null;
 
@@ -72,22 +84,9 @@ export function HomeScreen() {
             {goals ? `of ${goals.calories} kcal` : 'kcal today'}
           </span>
         </ProgressRing>
-        {goals ? (
-          <div className="mt-2 grid w-full grid-cols-3 gap-2 px-2 text-center">
-            <div>
-              <p className="metric text-sm font-semibold">{goals.proteinG} g</p>
-              <p className="text-[11px] text-muted">protein goal</p>
-            </div>
-            <div>
-              <p className="metric text-sm font-semibold">{goals.waterMl} ml</p>
-              <p className="text-[11px] text-muted">water goal</p>
-            </div>
-            <div>
-              <p className="metric text-sm font-semibold">{goals.sleepH} h</p>
-              <p className="text-[11px] text-muted">sleep goal</p>
-            </div>
-          </div>
-        ) : null}
+        <div className="mt-3 w-full px-1">
+          <MacroBars totals={macros} proteinGoal={goals?.proteinG} />
+        </div>
       </Card>
 
       <div className="grid grid-cols-2 gap-3">

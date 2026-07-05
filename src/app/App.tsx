@@ -40,6 +40,13 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: 'nutrition/foods',
+            lazy: async () => ({
+              Component: (await import('../features/nutrition/FoodDatabaseScreen'))
+                .FoodDatabaseScreen,
+            }),
+          },
+          {
             path: 'workout',
             lazy: async () => ({
               Component: (await import('../features/workout/WorkoutScreen')).WorkoutScreen,

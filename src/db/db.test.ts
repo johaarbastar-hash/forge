@@ -120,7 +120,7 @@ describe('exportAll / importAll', () => {
 
     const dump = await exportAll();
     expect(dump.app).toBe('forge');
-    expect(dump.schemaVersion).toBe(1);
+    expect(dump.schemaVersion).toBe(2); // bumped for favoriteMeals (migrations v2)
     expect(Object.keys(dump.tables).sort()).toEqual(
       db.tables.map((t) => t.name).sort(),
     );
