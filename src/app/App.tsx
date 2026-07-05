@@ -47,6 +47,18 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: 'water',
+            lazy: async () => ({
+              Component: (await import('../features/water/WaterScreen')).WaterScreen,
+            }),
+          },
+          {
+            path: 'sleep',
+            lazy: async () => ({
+              Component: (await import('../features/sleep/SleepScreen')).SleepScreen,
+            }),
+          },
+          {
             path: 'workout',
             lazy: async () => ({
               Component: (await import('../features/workout/WorkoutScreen')).WorkoutScreen,

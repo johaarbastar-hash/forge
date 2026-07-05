@@ -52,10 +52,10 @@ Checkpoint baseline for every phase: `npm run typecheck && npm run test && npm r
 
 ## Phase 4 — Water, Sleep, Weight, Quick Add, Dashboard v1
 
-- [ ] Water screen: +250/+500/+750/+1000, undo last, animated bottle fill, weekly/monthly averages; WATER_GOAL_HIT XP
-- [ ] Sleep log (hours + optional bedtime); SLEEP_GOAL_HIT XP. Weight log; WEIGHT_LOGGED XP
-- [ ] FAB quick-add sheet fully wired: Meal / Water / Weight / Workout(→ today's session)
-- [ ] Dashboard v1 complete per §5.2 order (streak row, weight card with trend arrow, XP level card, weekly mini-summary; Coach card placeholder-free — hidden until Phase 8)
+- [x] Water screen: +250/+500/+750/+1000, undo last, animated bottle fill, weekly/monthly averages; WATER_GOAL_HIT XP
+- [x] Sleep log (hours + optional bedtime); SLEEP_GOAL_HIT XP. Weight log; WEIGHT_LOGGED XP
+- [x] FAB quick-add sheet fully wired: Meal / Water / Weight / Workout(→ today's session)
+- [x] Dashboard v1 complete per §5.2 order (streak row, weight card with trend arrow, XP level card, weekly mini-summary; Coach card placeholder-free — hidden until Phase 8)
 
 **Checkpoint:** baseline.
 **Accept:** every quick-add writes correctly and dashboard reflects it without reload; streak row matches lib streak tests.
@@ -135,6 +135,11 @@ _Append one line per judgment call: date — decision — reason._
 - 2026-07-05 — Macro bars for carbs/fat/fiber scale relative to the largest of the three (SPEC gives no targets for them); only protein tracks against a real goal.
 - 2026-07-05 — Meal builder auto-opens the Recents tab when any history exists, making a recent-meal log a 3-tap flow (open → recent food → save); favorite combos log in 1 tap from the Quick-log row.
 - 2026-07-05 — Meal builder models one row per food (tap a food to toggle it in/out), then adjusts quantity; piece foods stepped in whole pieces, g/ml foods in 10-unit steps.
+- 2026-07-05 — Streak row derives workout/protein/water streaks from the xpEvents ledger (days with WORKOUT_COMPLETED / PROTEIN_GOAL_HIT / WATER_GOAL_HIT). The ledger already captures "goal hit that day against that day's goal", so historical streaks stay correct across goal edits; nothing extra is stored.
+- 2026-07-05 — Water and Sleep have no tab/FAB home in SPEC §2, so both are added to the More menu as their entry points; Water is also reachable from the dashboard card and FAB. Logged as a small nav addition.
+- 2026-07-05 — FAB quick-add: Meal opens the shared MealBuilderSheet, Water/Weight open inline quick panels in a sheet, Workout navigates to /workout (per the plan's "→ today's session"). Water/Weight panels are shared with the Water screen and dashboard.
+- 2026-07-05 — Water weekly/monthly figures use tracked-day averages (mean over logged days in the last 7/30) rather than total÷window, matching the app's zero-log-excluded analytics convention.
+- 2026-07-05 — Dashboard weight trend compares the latest weigh-in to the nearest one ≥7 days earlier (falls back to the earliest); shows ↑/↓/→ with the kg delta.
 
 ## DoD verification (fill in Phase 8)
 

@@ -8,6 +8,8 @@ import {
   IconCheck,
   IconChevronRight,
   IconDownload,
+  IconDrop,
+  IconMoon,
   IconSearch,
   IconSettings,
   IconSparkles,
@@ -24,6 +26,8 @@ type MoreItem = {
 };
 
 const items: MoreItem[] = [
+  { to: '/water', label: 'Water', description: 'Bottle fill and averages', icon: IconDrop },
+  { to: '/sleep', label: 'Sleep', description: 'Log hours and bedtime', icon: IconMoon },
   { to: '/more/calendar', label: 'Calendar', description: 'Every day at a glance', icon: IconCalendar },
   { to: '/more/habits', label: 'Habits', description: 'Daily check-offs and streaks', icon: IconCheck },
   { to: '/more/goals', label: 'Goals', description: 'Targets for food, water and training', icon: IconTarget },

@@ -10,6 +10,20 @@ export async function waterTotalForDay(dayKey: DayKey): Promise<number> {
   return logs.reduce((sum, l) => sum + l.ml, 0);
 }
 
+export async function allWaterLogs(): Promise<WaterLog[]> {
+  return db.waterLogs.toArray();
+}
+
+/** Per-day water totals for the given days (missing days omitted). */
+export async function waterTotalsByDays(dayKeys: DayKey[]): Promise<Map<DayKey, number>> {
+  const logs = await db.waterLogs.where('dayKey').anyOf(dayKeys).toArray();
+  const totals = new Map<DayKey, number>();
+  for (const log of logs) {
+    totals.set(log.dayKey, (totals.get(log.dayKey) ?? 0) + log.ml);
+  }
+  return totals;
+}
+
 export async function addWater(dayKey: DayKey, ml: number, time: string): Promise<WaterLog> {
   const log: WaterLog = { id: newId(), dayKey, ml, time, createdAt: nowIso(), updatedAt: nowIso() };
   await db.waterLogs.add(log);

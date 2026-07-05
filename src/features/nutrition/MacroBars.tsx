@@ -38,12 +38,12 @@ export function MacroBars({ totals, proteinGoal }: MacroBarsProps) {
               style={{ width: `${Math.round(Math.min(1, Math.max(0, row.fraction)) * 100)}%` }}
             />
           </div>
-          <span className="metric w-14 text-right text-xs">
+          <span className="metric w-16 whitespace-nowrap text-right text-xs">
             {Math.round(row.grams)}
-            <span className="text-muted"> g</span>
             {row.key === 'protein' && proteinGoal ? (
               <span className="text-muted">/{proteinGoal}</span>
             ) : null}
+            <span className="text-muted"> g</span>
           </span>
         </div>
       ))}

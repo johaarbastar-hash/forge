@@ -12,6 +12,10 @@ export async function mealsByDay(dayKey: DayKey): Promise<Meal[]> {
   return db.meals.where('dayKey').equals(dayKey).sortBy('time');
 }
 
+export async function mealsByDays(dayKeys: DayKey[]): Promise<Meal[]> {
+  return db.meals.where('dayKey').anyOf(dayKeys).toArray();
+}
+
 export async function countMeals(): Promise<number> {
   return db.meals.count();
 }

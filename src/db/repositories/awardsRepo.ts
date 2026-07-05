@@ -1,5 +1,7 @@
 import { getGoalsForDay } from './goalsRepo';
 import { mealsByDay } from './mealsRepo';
+import { sleepByDay } from './sleepRepo';
+import { waterTotalForDay } from './waterRepo';
 import { awardXp } from './xpRepo';
 import type { DayKey } from '../../types';
 
@@ -18,4 +20,27 @@ export async function evaluateProteinGoal(dayKey: DayKey): Promise<boolean> {
     return awardXp(dayKey, 'PROTEIN_GOAL_HIT');
   }
   return false;
+}
+
+/** Award WATER_GOAL_HIT when the day's water reaches the goal active that day. Idempotent. */
+export async function evaluateWaterGoal(dayKey: DayKey): Promise<boolean> {
+  const goals = await getGoalsForDay(dayKey);
+  if (!goals || goals.waterMl <= 0) return false;
+  const total = await waterTotalForDay(dayKey);
+  if (total >= goals.waterMl) return awardXp(dayKey, 'WATER_GOAL_HIT');
+  return false;
+}
+
+/** Award SLEEP_GOAL_HIT when logged sleep reaches the goal active that day. Idempotent. */
+export async function evaluateSleepGoal(dayKey: DayKey): Promise<boolean> {
+  const goals = await getGoalsForDay(dayKey);
+  if (!goals || goals.sleepH <= 0) return false;
+  const sleep = await sleepByDay(dayKey);
+  if (sleep && sleep.hours + 1e-6 >= goals.sleepH) return awardXp(dayKey, 'SLEEP_GOAL_HIT');
+  return false;
+}
+
+/** Award WEIGHT_LOGGED for any day a weigh-in exists. Idempotent (once per day). */
+export async function awardWeightLogged(dayKey: DayKey): Promise<boolean> {
+  return awardXp(dayKey, 'WEIGHT_LOGGED');
 }

@@ -1,37 +1,50 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useState } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { useNavigate } from 'react-router-dom';
 import type { ComponentType, SVGProps } from 'react';
 
+import { Card } from '../components/Card';
 import { Sheet } from '../components/Sheet';
-import {
-  IconDrop,
-  IconDumbbell,
-  IconPlus,
-  IconScale,
-  IconUtensils,
-} from '../components/icons';
+import { IconDrop, IconDumbbell, IconPlus, IconScale, IconUtensils } from '../components/icons';
+import { recentFoodIds } from '../db/repositories/mealsRepo';
+import { todayKey } from '../lib/dates';
+import { MealBuilderSheet } from '../features/nutrition/MealBuilderSheet';
+import { WaterQuickPanel } from '../features/water/WaterQuickPanel';
+import { WeightQuickPanel } from '../features/weight/WeightQuickPanel';
+
+type ActionKey = 'meal' | 'water' | 'weight' | 'workout';
 
 type QuickAction = {
+  key: ActionKey;
   label: string;
   description: string;
-  to: string;
   icon: ComponentType<SVGProps<SVGSVGElement> & { size?: number }>;
 };
 
-// Quick-add targets navigate to each action's host screen; the real one-tap
-// forms arrive with their features (meals Phase 3, water/weight Phase 4).
 const actions: QuickAction[] = [
-  { label: 'Meal', description: 'Log food by category', to: '/nutrition', icon: IconUtensils },
-  { label: 'Water', description: 'Add to today’s intake', to: '/', icon: IconDrop },
-  { label: 'Weight', description: 'Record today’s weigh-in', to: '/progress', icon: IconScale },
-  { label: 'Workout', description: 'Open today’s session', to: '/workout', icon: IconDumbbell },
+  { key: 'meal', label: 'Meal', description: 'Log food by category', icon: IconUtensils },
+  { key: 'water', label: 'Water', description: 'Add to today’s intake', icon: IconDrop },
+  { key: 'weight', label: 'Weight', description: 'Record today’s weigh-in', icon: IconScale },
+  { key: 'workout', label: 'Workout', description: 'Open today’s session', icon: IconDumbbell },
 ];
 
 export function QuickAdd() {
-  const [open, setOpen] = useState(false);
+  const [chooserOpen, setChooserOpen] = useState(false);
+  const [active, setActive] = useState<Exclude<ActionKey, 'workout'> | null>(null);
   const navigate = useNavigate();
   const reducedMotion = useReducedMotion();
+  const today = todayKey();
+  const hasRecents = useLiveQuery(async () => (await recentFoodIds(1)).length > 0, []) ?? false;
+
+  const choose = (key: ActionKey) => {
+    setChooserOpen(false);
+    if (key === 'workout') {
+      navigate('/workout');
+      return;
+    }
+    setActive(key);
+  };
 
   return (
     <>
@@ -39,7 +52,7 @@ export function QuickAdd() {
         type="button"
         aria-label="Quick add"
         aria-haspopup="dialog"
-        onClick={() => setOpen(true)}
+        onClick={() => setChooserOpen(true)}
         whileTap={reducedMotion ? undefined : { scale: 0.92 }}
         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
         className="glass fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full border text-text shadow-lg shadow-black/50"
@@ -50,16 +63,13 @@ export function QuickAdd() {
         </span>
       </motion.button>
 
-      <Sheet open={open} onClose={() => setOpen(false)} title="Quick add">
+      <Sheet open={chooserOpen} onClose={() => setChooserOpen(false)} title="Quick add">
         <div className="grid grid-cols-2 gap-3">
-          {actions.map(({ label, description, to, icon: Icon }) => (
+          {actions.map(({ key, label, description, icon: Icon }) => (
             <button
-              key={label}
+              key={key}
               type="button"
-              onClick={() => {
-                setOpen(false);
-                navigate(to);
-              }}
+              onClick={() => choose(key)}
               className="flex flex-col items-start gap-2 rounded-card border bg-surface-2 p-4 text-left transition-colors duration-150 hover:bg-white/10"
             >
               <span className="text-accent">
@@ -72,6 +82,26 @@ export function QuickAdd() {
             </button>
           ))}
         </div>
+      </Sheet>
+
+      {active === 'meal' ? (
+        <MealBuilderSheet
+          open
+          onClose={() => setActive(null)}
+          dayKey={today}
+          target={{ mode: 'create' }}
+          initialTab={hasRecents ? 'recents' : 'search'}
+        />
+      ) : null}
+
+      <Sheet open={active === 'water'} onClose={() => setActive(null)} title="Add water">
+        <WaterQuickPanel dayKey={today} />
+      </Sheet>
+
+      <Sheet open={active === 'weight'} onClose={() => setActive(null)} title="Log weight">
+        <Card variant="surface-2">
+          <WeightQuickPanel dayKey={today} onSaved={() => setActive(null)} />
+        </Card>
       </Sheet>
     </>
   );
