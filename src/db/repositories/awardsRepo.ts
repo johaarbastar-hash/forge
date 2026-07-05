@@ -44,3 +44,8 @@ export async function evaluateSleepGoal(dayKey: DayKey): Promise<boolean> {
 export async function awardWeightLogged(dayKey: DayKey): Promise<boolean> {
   return awardXp(dayKey, 'WEIGHT_LOGGED');
 }
+
+/** Award WORKOUT_COMPLETED when a session is finished. Idempotent (once per day). */
+export async function awardWorkoutCompleted(dayKey: DayKey): Promise<boolean> {
+  return awardXp(dayKey, 'WORKOUT_COMPLETED');
+}

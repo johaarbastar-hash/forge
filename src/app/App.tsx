@@ -65,6 +65,13 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: 'workout/history/:exerciseId',
+            lazy: async () => ({
+              Component: (await import('../features/workout/ExerciseHistoryScreen'))
+                .ExerciseHistoryScreen,
+            }),
+          },
+          {
             path: 'progress',
             lazy: async () => ({
               Component: (await import('../features/progress/ProgressScreen')).ProgressScreen,

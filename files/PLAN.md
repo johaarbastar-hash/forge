@@ -62,11 +62,11 @@ Checkpoint baseline for every phase: `npm run typecheck && npm run test && npm r
 
 ## Phase 5 — Workouts
 
-- [ ] Split day view (scheduled day, default exercises, rest-day card)
-- [ ] Session logger: set rows (reps/weight steppers, 2.5 kg increments), copy-last-set, prefill from last session, add/swap/remove exercise, notes
-- [ ] Rest timer: 60/90/120/180 presets, timestamp-based (survives tab switch), chime + vibration where supported
-- [ ] Finish flow: auto duration, WORKOUT_COMPLETED XP, summary card
-- [ ] Exercise history + PRs: best weight, best e1RM, PR badge on new records; PR history list
+- [x] Split day view (scheduled day, default exercises, rest-day card)
+- [x] Session logger: set rows (reps/weight steppers, 2.5 kg increments), copy-last-set, prefill from last session, add/swap/remove exercise, notes
+- [x] Rest timer: 60/90/120/180 presets, timestamp-based (survives tab switch), chime + vibration where supported
+- [x] Finish flow: auto duration, WORKOUT_COMPLETED XP, summary card
+- [x] Exercise history + PRs: best weight, best e1RM, PR badge on new records; PR history list
 
 **Checkpoint:** baseline.
 **Accept:** full PPL push session loggable start→finish; PR badge fires on a new e1RM; switching tabs for 2 min doesn't desync the rest timer.
@@ -140,6 +140,11 @@ _Append one line per judgment call: date — decision — reason._
 - 2026-07-05 — FAB quick-add: Meal opens the shared MealBuilderSheet, Water/Weight open inline quick panels in a sheet, Workout navigates to /workout (per the plan's "→ today's session"). Water/Weight panels are shared with the Water screen and dashboard.
 - 2026-07-05 — Water weekly/monthly figures use tracked-day averages (mean over logged days in the last 7/30) rather than total÷window, matching the app's zero-log-excluded analytics convention.
 - 2026-07-05 — Dashboard weight trend compares the latest weigh-in to the nearest one ≥7 days earlier (falls back to the earliest); shows ↑/↓/→ with the kg delta.
+- 2026-07-05 — Added `zustand` (approved dep) for the rest timer store, persisted to localStorage. The timer stores a target `endsAt` timestamp (not a counter), so remaining = endsAt − now stays correct through tab throttling and even a full reload (verified: resumed at 2:47 after reload). localStorage use is transient UI state, allowed by CLAUDE.md.
+- 2026-07-05 — Starting a session prefills each exercise from its last session's sets (else one 8×20 set); "Last session" and "Copy last set" also available per exercise.
+- 2026-07-05 — PR baseline is 0 when an exercise has no prior completed history, so a first-ever record counts as a PR (consistent across the live badge, finish summary, and history screen; enables the Phase 7 first_pr achievement). Scheduled-day prefill equals last session, so it shows no false PR.
+- 2026-07-05 — Rest days show a rest card with an optional "Train anyway" that starts an empty custom session; the session logger and finish/PR/XP path are identical to a scheduled day.
+- 2026-07-05 — Session edits persist to the in-progress workout on every change (survives navigation); Finish sets completed + auto duration (from createdAt) and awards WORKOUT_COMPLETED once per day. "Reopen to edit" flips completed back to false.
 
 ## DoD verification (fill in Phase 8)
 
