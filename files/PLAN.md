@@ -73,10 +73,10 @@ Checkpoint baseline for every phase: `npm run typecheck && npm run test && npm r
 
 ## Phase 6 — Progress, Calendar, Habits
 
-- [ ] Charts (7/30/90): weight raw + 7-day rolling avg, kcal vs goal, protein vs goal, water vs goal, workouts/week — Recharts in a lazy chunk
-- [ ] Measurements CRUD + per-field sparkline; progress photos (capture/upload → compress 1280 px JPEG q0.8 → Blob), timeline grid + two-photo compare
-- [ ] Calendar month grid with day dots; day detail sheet (meals, workout, water, weight, sleep, note, mood 1–5), past days editable
-- [ ] Habits screen: seeded + custom, daily check grid, current/best streaks (derived)
+- [x] Charts (7/30/90): weight raw + 7-day rolling avg, kcal vs goal, protein vs goal, water vs goal, workouts/week — Recharts in a lazy chunk
+- [x] Measurements CRUD + per-field sparkline; progress photos (capture/upload → compress 1280 px JPEG q0.8 → Blob), timeline grid + two-photo compare
+- [x] Calendar month grid with day dots; day detail sheet (meals, workout, water, weight, sleep, note, mood 1–5), past days editable
+- [x] Habits screen: seeded + custom, daily check grid, current/best streaks (derived)
 
 **Checkpoint:** baseline.
 **Accept:** with demo data loaded (temporary dev hook is fine until Phase 8 button), all five charts render sane; a photo persists offline; editing a past day updates calendar dots.
@@ -145,6 +145,12 @@ _Append one line per judgment call: date — decision — reason._
 - 2026-07-05 — PR baseline is 0 when an exercise has no prior completed history, so a first-ever record counts as a PR (consistent across the live badge, finish summary, and history screen; enables the Phase 7 first_pr achievement). Scheduled-day prefill equals last session, so it shows no false PR.
 - 2026-07-05 — Rest days show a rest card with an optional "Train anyway" that starts an empty custom session; the session logger and finish/PR/XP path are identical to a scheduled day.
 - 2026-07-05 — Session edits persist to the in-progress workout on every change (survives navigation); Finish sets completed + auto duration (from createdAt) and awards WORKOUT_COMPLETED once per day. "Reopen to edit" flips completed back to false.
+- 2026-07-05 — Recharts (approved dep, already installed) lives only in the lazy ProgressScreen chunk (~411 kB), keeping it out of the entry bundle per CLAUDE.md.
+- 2026-07-05 — Charts use the current goal as a single reference line (not per-day goalHistory) for simplicity; the goal-line charts force the Y-axis domain to include the goal so it stays visible even when logs fall short.
+- 2026-07-05 — Progress screen is one route with Charts/Body/Photos sub-tabs; photos stored as compressed JPEG Blobs (canvas, max edge 1280, q0.8) via `src/lib/image.ts`, rendered through object URLs revoked on cleanup.
+- 2026-07-05 — Calendar water-goal dot uses the current water goal; day-detail sheet reuses WaterQuickPanel/WeightQuickPanel/MealBuilderSheet for that day plus inline sleep + note/mood, so editing a past day updates dots live via liveQuery.
+- 2026-07-05 — Habit streaks derived from habitLogs (done days) via the existing streak lib; check grid covers the trailing 7 days.
+- 2026-07-05 — `loadDemoData()` (SPEC §5.17, full 30-day generator) added now and wired to a temporary "Load demo data" button on Settings; Phase 8 will formalise Developer tools (add Wipe + double-confirm). Meals tuned to ~2750 kcal / ~120 g protein so goal lines and analytics are exercised.
 
 ## DoD verification (fill in Phase 8)
 

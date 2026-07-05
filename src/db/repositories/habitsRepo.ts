@@ -31,6 +31,10 @@ export async function habitLogsByDay(dayKey: DayKey): Promise<HabitLog[]> {
   return db.habitLogs.where('dayKey').equals(dayKey).toArray();
 }
 
+export async function allHabitLogs(): Promise<HabitLog[]> {
+  return db.habitLogs.toArray();
+}
+
 export async function logsForHabit(habitId: string): Promise<HabitLog[]> {
   return db.habitLogs.where('habitId').equals(habitId).toArray();
 }
