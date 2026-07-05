@@ -1,8 +1,10 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 
+import { CelebrationOverlay } from '../components/CelebrationOverlay';
 import { QuickAdd } from './QuickAdd';
 import { TabBar } from './TabBar';
+import { useGamification } from './useGamification';
 
 function RouteLoading() {
   return (
@@ -13,6 +15,7 @@ function RouteLoading() {
 }
 
 export function AppShell() {
+  useGamification();
   return (
     <div className="mx-auto min-h-dvh w-full max-w-lg">
       <main className="px-4 pb-36 pt-6">
@@ -22,6 +25,7 @@ export function AppShell() {
       </main>
       <QuickAdd />
       <TabBar />
+      <CelebrationOverlay />
     </div>
   );
 }

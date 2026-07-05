@@ -83,10 +83,10 @@ Checkpoint baseline for every phase: `npm run typecheck && npm run test && npm r
 
 ## Phase 7 — Gamification
 
-- [ ] All XP events wired per SPEC §5.11 table incl. STREAK_DAY and ALL_MISSIONS_DONE; awards idempotent (unique dayKey+type)
-- [ ] Level system + full-screen level-up animation (ember burst; reduced-motion → simple fade)
-- [ ] Achievements grid (12 from §5.11), evaluation on relevant writes, unlock animation fires exactly once, unlocks persisted
-- [ ] Daily missions generated from goals (rest-day aware); weekly challenges (Mon–Sun) with progress bars
+- [x] All XP events wired per SPEC §5.11 table incl. STREAK_DAY and ALL_MISSIONS_DONE; awards idempotent (unique dayKey+type)
+- [x] Level system + full-screen level-up animation (ember burst; reduced-motion → simple fade)
+- [x] Achievements grid (12 from §5.11), evaluation on relevant writes, unlock animation fires exactly once, unlocks persisted
+- [x] Daily missions generated from goals (rest-day aware); weekly challenges (Mon–Sun) with progress bars
 
 **Checkpoint:** baseline; idempotency test: completing the same goal twice in a day awards once.
 **Accept:** demo-data day triggers correct missions/XP; achievement unlock replays never re-fire; level math matches `threshold(n)` tests.
@@ -151,6 +151,11 @@ _Append one line per judgment call: date — decision — reason._
 - 2026-07-05 — Calendar water-goal dot uses the current water goal; day-detail sheet reuses WaterQuickPanel/WeightQuickPanel/MealBuilderSheet for that day plus inline sleep + note/mood, so editing a past day updates dots live via liveQuery.
 - 2026-07-05 — Habit streaks derived from habitLogs (done days) via the existing streak lib; check grid covers the trailing 7 days.
 - 2026-07-05 — `loadDemoData()` (SPEC §5.17, full 30-day generator) added now and wired to a temporary "Load demo data" button on Settings; Phase 8 will formalise Developer tools (add Wipe + double-confirm). Meals tuned to ~2750 kcal / ~120 g protein so goal lines and analytics are exercised.
+- 2026-07-05 — STREAK_DAY = a day with any log whose previous day also had a log (awards 15 once/day); ALL_MISSIONS_DONE = all *applicable* daily missions done (workout mission excluded on rest days). Both awarded by `evaluateDay(dayKey)`.
+- 2026-07-05 — Gamification is driven by one global watcher (`useGamification` in AppShell) on a liveQuery signal: it awards day-level XP, unlocks newly-earned achievements, and queues full-screen celebrations. All awards idempotent, so the write-back settles without looping.
+- 2026-07-05 — Level-up detection tracks the last-celebrated level in localStorage (`forge-last-level`); initialised to the current level so it never fires on first load, fires once per real increase. Celebrations use a zustand FIFO queue rendered one-at-a-time by `CelebrationOverlay`.
+- 2026-07-05 — `first_pr` achievement = a genuine PR (a later session beat an earlier one), distinct from `first_workout`; the first-ever session's zero-baseline PR badge does not count here. `early_bird` = workout finish (createdAt + duration) before 08:00 local.
+- 2026-07-05 — Daily missions + weekly challenges live on the Achievements screen (SPEC §2 gives them no dedicated home); demo data pre-unlocks achievements silently so the live watcher doesn't replay 11 celebrations.
 
 ## DoD verification (fill in Phase 8)
 

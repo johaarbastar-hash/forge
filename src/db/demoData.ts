@@ -9,6 +9,11 @@ import {
   evaluateSleepGoal,
   evaluateWaterGoal,
 } from './repositories/awardsRepo';
+import {
+  collectAnyLogDays,
+  evaluateAchievements,
+  evaluateDay,
+} from './repositories/gamificationRepo';
 import { getProfile } from './repositories/profileRepo';
 
 const DEMO_DAYS = 30;
@@ -204,4 +209,12 @@ export async function loadDemoData(): Promise<void> {
       awardWeightLogged(day),
     ]);
   }
+
+  // Day-level XP (STREAK_DAY / ALL_MISSIONS_DONE) once all logs exist, then
+  // unlock achievements silently (the live watcher won't re-fire them).
+  const anyLogDays = await collectAnyLogDays();
+  for (let i = DEMO_DAYS - 1; i >= 0; i--) {
+    await evaluateDay(addDaysToKey(now, -i), anyLogDays);
+  }
+  await evaluateAchievements(now);
 }

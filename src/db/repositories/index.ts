@@ -4,6 +4,7 @@ export * from './dayNotesRepo';
 export * from './exercisesRepo';
 export * from './favoriteMealsRepo';
 export * from './foodsRepo';
+export * from './gamificationRepo';
 export * from './goalsRepo';
 export * from './habitsRepo';
 export * from './mealsRepo';
