@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { Card } from '../../components/Card';
 import { ScreenHeader } from '../../components/ScreenHeader';
@@ -23,6 +24,18 @@ export function CalendarScreen() {
     return { year: y ?? 2026, month: m ?? 1 };
   });
   const [selected, setSelected] = useState<DayKey | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Deep link from Search: /more/calendar?day=YYYY-MM-DD opens that day.
+  const dayParam = searchParams.get('day');
+  useEffect(() => {
+    if (!dayParam || !/^\d{4}-\d{2}-\d{2}$/.test(dayParam)) return;
+    const [y, m] = dayParam.split('-').map(Number);
+    if (y && m) setYm({ year: y, month: m });
+    setSelected(dayParam);
+    searchParams.delete('day');
+    setSearchParams(searchParams, { replace: true });
+  }, [dayParam, searchParams, setSearchParams]);
 
   const weeks = monthGrid(year, month);
   const monthDays = weeks.flat().map((c) => c.dayKey);

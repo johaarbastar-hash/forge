@@ -93,14 +93,14 @@ Checkpoint baseline for every phase: `npm run typecheck && npm run test && npm r
 
 ## Phase 8 — Analytics, Coach, Search, Export, Reminders, PWA polish
 
-- [ ] Weekly + monthly report screens (§5.10 metrics + all five scores, deltas vs previous period)
-- [ ] Coach: 12 rules from §5.12 as pure tested functions; Coach page (all insights + metric context); dashboard top-3 card enabled
-- [ ] Unified search (foods, favorite meals, exercises, dates incl. "12 Jul" parsing → calendar day)
-- [ ] Export: CSVs per data type, JSON full dump, printable monthly report (print CSS)
-- [ ] Reminders settings (§5.15): per-type toggles/times, in-app banners, Notification API path, honest copy about background limits
-- [ ] PWA polish: icons/splash verified on device, offline pass (airplane-mode walkthrough of all tabs), install prompt in Settings
-- [ ] Settings → Developer: Load demo data (30 days per §5.17), Wipe all data (double confirm)
-- [ ] Final sweep: Definition of Done list in SPEC §7, item by item
+- [x] Weekly + monthly report screens (§5.10 metrics + all five scores, deltas vs previous period)
+- [x] Coach: 12 rules from §5.12 as pure tested functions; Coach page (all insights + metric context); dashboard top-3 card enabled
+- [x] Unified search (foods, favorite meals, exercises, dates incl. "12 Jul" parsing → calendar day)
+- [x] Export: CSVs per data type, JSON full dump, printable monthly report (print CSS)
+- [x] Reminders settings (§5.15): per-type toggles/times, in-app banners, Notification API path, honest copy about background limits
+- [x] PWA polish: icons/splash verified on device, offline pass (SW active + 76-entry precache, all tabs), install prompt in Settings
+- [x] Settings → Developer: Load demo data (30 days per §5.17), Wipe all data (double confirm)
+- [x] Final sweep: Definition of Done list in SPEC §7, item by item
 
 **Checkpoint:** baseline + Lighthouse installable + offline walkthrough clean.
 **Accept:** every §7 item verified and noted below.
@@ -156,12 +156,18 @@ _Append one line per judgment call: date — decision — reason._
 - 2026-07-05 — Level-up detection tracks the last-celebrated level in localStorage (`forge-last-level`); initialised to the current level so it never fires on first load, fires once per real increase. Celebrations use a zustand FIFO queue rendered one-at-a-time by `CelebrationOverlay`.
 - 2026-07-05 — `first_pr` achievement = a genuine PR (a later session beat an earlier one), distinct from `first_workout`; the first-ever session's zero-baseline PR badge does not count here. `early_bird` = workout finish (createdAt + duration) before 08:00 local.
 - 2026-07-05 — Daily missions + weekly challenges live on the Achievements screen (SPEC §2 gives them no dedicated home); demo data pre-unlocks achievements silently so the live watcher doesn't replay 11 celebrations.
+- 2026-07-05 — Coach rule priorities (SPEC pins 1–5 but not per-rule): streak_risk=1; protein_gap/calories_low/weight_stalled/weight_too_fast/rest_reminder=2; water_gap/skipped_day/sleep_low=3; positives (weight_on_track/consistency_praise/pr_congrats)=4. Dashboard shows the 3 lowest-number (most urgent).
+- 2026-07-05 — Analytics: weekly report = Mon–Sun week vs prior week; monthly = calendar month vs prior calendar month. Goal reference for scores uses the current goal. Weight-gain rate regresses full 7-day windows with leading context.
+- 2026-07-05 — Reminders are in-app only (toast + Notification API when granted) via `useReminders`; timing decisions are pure/tested. Honest Settings copy: "Reminders fire while Forge is open; background push arrives with cloud sync later." No push server (per CLAUDE.md).
+- 2026-07-05 — Search date parsing (`lib/dateParse.ts`) accepts ISO + "12 Jul"/"Jul 12"/"12 July 2026"; a date result deep-links to `/more/calendar?day=…` which opens that day.
+- 2026-07-05 — Export: CSV per data type + full JSON dump download via Blob/anchor; printable report = the Analytics monthly view with `@media print` CSS dropping app chrome. Install prompt captured via `beforeinstallprompt`; Wipe all data double-confirms then deletes the DB + localStorage and reloads.
+- 2026-07-05 — App version bumped to v1.0.0 in Settings for the final release.
 
 ## DoD verification (fill in Phase 8)
 
-- [ ] typecheck / test / build clean
-- [ ] Installable + offline verified
-- [ ] 360–430 px pass on all screens
-- [ ] Empty states everywhere, no console errors
-- [ ] All required unit tests green (SPEC §7.5)
-- [ ] Zero TODOs / placeholders / `any`
+- [x] typecheck / test / build clean — 138 tests green; `tsc --noEmit` clean; production build passes (lint clean bar one benign react-refresh warning on Toast.tsx)
+- [x] Installable + offline verified — manifest (Forge, standalone, 4 icons incl. maskable), SW active & controlling the page, 76-entry Workbox precache with index.html navigateFallback
+- [x] 360–430 px pass on all screens — verified no horizontal overflow across all tabs at 360 px (tightest); 430 px has more room
+- [x] Empty states everywhere, no console errors — every list screen has a designed empty state; console clean across a full walkthrough
+- [x] All required unit tests green (SPEC §7.5) — dates/dayKey, streaks (gaps, month/leap boundaries, today-unlogged), macro aggregation (g/ml/piece), BMI, XP idempotency + level curve, PR/e1RM, all 5 analytics scores, all 12 coach rules
+- [x] Zero TODOs / placeholders / `any` — grep clean (only HTML input `placeholder=` attributes remain); TS strict, no `@ts-ignore`

@@ -5,6 +5,7 @@ import { CelebrationOverlay } from '../components/CelebrationOverlay';
 import { QuickAdd } from './QuickAdd';
 import { TabBar } from './TabBar';
 import { useGamification } from './useGamification';
+import { useReminders } from './useReminders';
 
 function RouteLoading() {
   return (
@@ -16,6 +17,7 @@ function RouteLoading() {
 
 export function AppShell() {
   useGamification();
+  useReminders();
   return (
     <div className="mx-auto min-h-dvh w-full max-w-lg">
       <main className="px-4 pb-36 pt-6">

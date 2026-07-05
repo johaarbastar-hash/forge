@@ -16,6 +16,10 @@ export async function mealsByDays(dayKeys: DayKey[]): Promise<Meal[]> {
   return db.meals.where('dayKey').anyOf(dayKeys).toArray();
 }
 
+export async function allMeals(): Promise<Meal[]> {
+  return db.meals.orderBy('dayKey').toArray();
+}
+
 export async function countMeals(): Promise<number> {
   return db.meals.count();
 }

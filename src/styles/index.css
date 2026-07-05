@@ -25,3 +25,27 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
+
+/* Printable report (SPEC §5.14): drop app chrome, print on white. */
+@media print {
+  nav,
+  .no-print,
+  [aria-label='Quick add'] {
+    display: none !important;
+  }
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+  main {
+    padding: 0 !important;
+  }
+  .print-report .rounded-card {
+    border: 1px solid #ddd !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .print-report .text-muted {
+    color: #555 !important;
+  }
+}

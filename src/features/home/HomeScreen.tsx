@@ -8,10 +8,11 @@ import { ProgressRing } from '../../components/ProgressRing';
 import { ScreenHeader } from '../../components/ScreenHeader';
 import { Sheet } from '../../components/Sheet';
 import { useToast } from '../../components/Toast';
-import { IconDrop, IconDumbbell, IconFlame, IconPlus } from '../../components/icons';
+import { IconDrop, IconDumbbell, IconFlame, IconPlus, IconSparkles } from '../../components/icons';
 import { quotes } from '../../data/quotes';
 import { getSplitTemplate } from '../../data/splits';
 import { evaluateWaterGoal } from '../../db/repositories/awardsRepo';
+import { buildCoachInput } from '../../db/repositories/analyticsRepo';
 import { addWater } from '../../db/repositories/waterRepo';
 import { getGoals } from '../../db/repositories/goalsRepo';
 import { mealsByDay, mealsByDays } from '../../db/repositories/mealsRepo';
@@ -24,6 +25,7 @@ import { trackedAverage } from '../../lib/analytics';
 import { bmi } from '../../lib/bmi';
 import { addDaysToKey, todayKey, weekKeys, weekdayOf } from '../../lib/dates';
 import { quoteForDay } from '../../lib/quotes';
+import { coachInsights } from '../../lib/coach';
 import { currentStreak } from '../../lib/streaks';
 import { levelProgress } from '../../lib/xp';
 import type { Macros, XpEventType } from '../../types';
@@ -103,8 +105,11 @@ export function HomeScreen() {
     }
     const workoutsThisWeek = workouts.filter((w) => w.completed && weekSet.has(w.dayKey)).length;
     const totalXp = xpEvents.reduce((s, e) => s + e.amount, 0);
+    const coachInput = await buildCoachInput(now);
+    const topInsights = coachInput ? coachInsights(coachInput).slice(0, 3) : [];
 
     return {
+      topInsights,
       profile: profile ?? null,
       goals: goals ?? null,
       macros,
@@ -296,6 +301,25 @@ export function HomeScreen() {
           />
         </div>
       </Card>
+
+      {/* Coach top-3 insights */}
+      {data && data.topInsights.length > 0 ? (
+        <button type="button" onClick={() => navigate('/more/coach')} className="text-left" aria-label="Open coach">
+          <Card className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-accent">
+                <IconSparkles size={16} />
+              </span>
+              <p className="text-xs font-medium uppercase tracking-wide text-muted">Coach</p>
+            </div>
+            {data.topInsights.map((insight) => (
+              <p key={insight.id} className="text-sm text-text">
+                {insight.message}
+              </p>
+            ))}
+          </Card>
+        </button>
+      ) : null}
 
       {/* weekly mini-summary */}
       <Card className="flex flex-col gap-2">
