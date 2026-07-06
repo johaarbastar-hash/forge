@@ -1,11 +1,12 @@
 import type { Transaction } from 'dexie';
 
 import { seedExercises } from '../data/exercises';
+import { seedFavoriteMeals } from '../data/favoriteMeals';
 import { seedFoods } from '../data/foods';
 import { seedHabits } from '../data/habits';
 import type { Settings, Timestamps } from '../types';
 
-function stamp<T>(row: T): T & Timestamps {
+export function stamp<T>(row: T): T & Timestamps {
   const now = new Date().toISOString();
   return { ...row, createdAt: now, updatedAt: now };
 }
@@ -31,5 +32,6 @@ export function seedDatabase(tx: Transaction): void {
   void tx.table('foods').bulkAdd(seedFoods.map(stamp));
   void tx.table('exercises').bulkAdd(seedExercises.map(stamp));
   void tx.table('habits').bulkAdd(seedHabits.map(stamp));
+  void tx.table('favoriteMeals').bulkAdd(seedFavoriteMeals.map(stamp));
   void tx.table('settings').add(stamp(DEFAULT_SETTINGS));
 }

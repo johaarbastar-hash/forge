@@ -1,5 +1,9 @@
 import type Dexie from 'dexie';
 
+import { seedFavoriteMeals } from '../data/favoriteMeals';
+import { extraSeedFoods } from '../data/foods';
+import { stamp } from './seed';
+
 /**
  * Versioned schema upgrades. Append a new `db.version(n)` block for every
  * schema change — never edit an existing version once shipped.
@@ -30,4 +34,14 @@ export function applyMigrations(db: Dexie): void {
   db.version(2).stores({
     favoriteMeals: 'id, name',
   });
+
+  // v3: extra seed foods + ready-made favorite meals. No schema change — the
+  // upgrade backfills existing databases; fresh installs get them via populate.
+  // bulkPut is idempotent on our stable slug ids and won't touch user rows.
+  db.version(3)
+    .stores({})
+    .upgrade(async (tx) => {
+      await tx.table('foods').bulkPut(extraSeedFoods.map(stamp));
+      await tx.table('favoriteMeals').bulkPut(seedFavoriteMeals.map(stamp));
+    });
 }

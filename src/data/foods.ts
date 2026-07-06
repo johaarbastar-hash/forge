@@ -26,7 +26,7 @@ const f = (
 
 // SPEC §4.1 verbatim — 19 items, values per the stated base. Do not edit here;
 // users may edit their own copies in-app ("approximate values — editable").
-export const seedFoods: SeedFood[] = [
+export const originalSeedFoods: SeedFood[] = [
   f('food-rice', 'Rice, white, cooked', 'g', 130, 2.7, 28.2, 0.3, 0.4, { label: '1 katori', grams: 150 }),
   f('food-roti', 'Roti (whole wheat)', 'piece', 115, 4.0, 23.0, 1.0, 3.5, { label: '1 piece', grams: 40 }, 40),
   f('food-dal', 'Dal (toor, cooked)', 'g', 95, 5.5, 14.5, 1.8, 3.0, { label: '1 katori', grams: 150 }),
@@ -47,3 +47,25 @@ export const seedFoods: SeedFood[] = [
   f('food-whey', 'Whey protein shake', 'piece', 120, 24.0, 3.0, 1.5, 0, { label: '1 scoop', grams: 30 }, 30),
   f('food-curd', 'Curd (full-fat dahi)', 'g', 65, 3.5, 4.5, 3.8, 0, { label: '1 katori', grams: 150 }),
 ];
+
+// Extension beyond SPEC §4.1 — common Indian/gym foods. Approximate
+// IFCT/USDA-based values, editable in-app like the rest. Added in schema v3.
+export const extraSeedFoods: SeedFood[] = [
+  f('food-poha', 'Poha (cooked)', 'g', 130, 2.5, 27.0, 1.5, 1.0, { label: '1 katori', grams: 150 }),
+  f('food-idli', 'Idli', 'piece', 58, 2.0, 12.0, 0.4, 0.6, { label: '2 pieces', grams: 80 }, 40),
+  f('food-dosa', 'Dosa, plain', 'piece', 168, 3.5, 29.0, 4.0, 1.2, { label: '1 piece', grams: 80 }, 80),
+  f('food-upma', 'Upma', 'g', 130, 3.0, 20.0, 4.0, 1.5, { label: '1 katori', grams: 150 }),
+  f('food-moong-dal', 'Moong dal (cooked)', 'g', 105, 7.0, 15.0, 0.5, 4.0, { label: '1 katori', grams: 150 }),
+  f('food-soya-chunks', 'Soya chunks, dry', 'g', 345, 52.0, 33.0, 0.5, 13.0, { label: '30 g', grams: 30 }),
+  f('food-greek-yogurt', 'Greek yogurt', 'g', 59, 10.0, 3.6, 0.4, 0, { label: '1 katori', grams: 150 }),
+  f('food-tofu', 'Tofu', 'g', 76, 8.0, 1.9, 4.8, 0.3, { label: '100 g', grams: 100 }),
+  f('food-almonds', 'Almonds', 'g', 579, 21.0, 22.0, 50.0, 12.5, { label: '30 g', grams: 30 }),
+  f('food-peanuts', 'Peanuts, roasted', 'g', 567, 26.0, 16.0, 49.0, 8.5, { label: '30 g', grams: 30 }),
+  f('food-ghee', 'Ghee', 'g', 900, 0, 0, 100.0, 0, { label: '1 tsp', grams: 5 }),
+  f('food-chicken-thigh', 'Chicken thigh, cooked', 'g', 209, 26.0, 0, 10.9, 0, { label: '100 g', grams: 100 }),
+  f('food-fish-rohu', 'Fish (rohu), cooked', 'g', 97, 16.6, 0, 3.0, 0, { label: '100 g', grams: 100 }),
+  f('food-brown-rice', 'Brown rice, cooked', 'g', 111, 2.6, 23.0, 0.9, 1.8, { label: '1 katori', grams: 150 }),
+  f('food-sweet-potato', 'Sweet potato, boiled', 'g', 86, 1.6, 20.0, 0.1, 3.0, { label: '1 katori', grams: 150 }),
+];
+
+export const seedFoods: SeedFood[] = [...originalSeedFoods, ...extraSeedFoods];

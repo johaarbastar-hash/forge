@@ -23,12 +23,13 @@ afterEach(() => {
 });
 
 describe('seed loader', () => {
-  it('a fresh DB seeds foods (19, SPEC §4.1), exercises (28), habits (8), settings', async () => {
-    expect(await db.foods.count()).toBe(19);
+  it('a fresh DB seeds foods (34: 19 §4.1 + 15 extra), exercises (28), habits (8), favorite meals, settings', async () => {
+    expect(await db.foods.count()).toBe(34);
     expect(await db.exercises.count()).toBe(28);
     expect(await db.habits.count()).toBe(8);
+    expect(await db.favoriteMeals.count()).toBe(6);
     expect(await db.settings.count()).toBe(1);
-    expect(seedFoods).toHaveLength(19);
+    expect(seedFoods).toHaveLength(34);
     expect(seedExercises).toHaveLength(28);
     expect(seedHabits).toHaveLength(8);
 
@@ -46,7 +47,7 @@ describe('seed loader', () => {
 
     const reopened = new ForgeDB();
     await reopened.open();
-    expect(await reopened.foods.count()).toBe(19); // no duplicates
+    expect(await reopened.foods.count()).toBe(34); // no duplicates
     const rice = await reopened.foods.get('food-rice');
     expect(rice?.isFavorite).toBe(true); // user data intact
     reopened.close();
@@ -120,11 +121,11 @@ describe('exportAll / importAll', () => {
 
     const dump = await exportAll();
     expect(dump.app).toBe('forge');
-    expect(dump.schemaVersion).toBe(2); // bumped for favoriteMeals (migrations v2)
+    expect(dump.schemaVersion).toBe(3); // v2 favoriteMeals, v3 extra foods + seeded favorites
     expect(Object.keys(dump.tables).sort()).toEqual(
       db.tables.map((t) => t.name).sort(),
     );
-    expect(dump.tables['foods']).toHaveLength(19);
+    expect(dump.tables['foods']).toHaveLength(34);
     expect(dump.tables['meals']).toHaveLength(1);
     // JSON-safe (no Blobs, no cycles)
     expect(() => JSON.stringify(dump)).not.toThrow();
@@ -133,7 +134,7 @@ describe('exportAll / importAll', () => {
     await db.meals.clear();
     await db.foods.clear();
     await importAll(dump);
-    expect(await db.foods.count()).toBe(19);
+    expect(await db.foods.count()).toBe(34);
     const restored = await mealsByDay('2026-07-04');
     expect(restored).toHaveLength(1);
     expect(restored[0]?.cachedMacros.kcal).toBe(338);

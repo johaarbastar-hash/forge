@@ -37,16 +37,42 @@ const rand = (min: number, max: number) => min + Math.random() * (max - min);
 const jitter = (base: number, spread: number) => base + (Math.random() - 0.5) * 2 * spread;
 
 /** A plausible day of meals from seed foods, quantities jittered per day. */
+const g = (foodId: string, grams: number): MealItem => ({ foodId, grams: Math.round(grams) });
+const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]!;
+
+// Rotating meal options per category so 30 days of demo data look varied while
+// each day still lands near a ~2750 kcal / ~120 g protein gaining target.
+const BREAKFASTS: (() => MealItem[])[] = [
+  () => [g('food-oats', jitter(70, 8)), g('food-milk', 250), g('food-banana', 120), g('food-peanut-butter', 24)],
+  () => [g('food-poha', jitter(150, 20)), g('food-curd', 150), g('food-banana', 120)],
+  () => [g('food-idli', 120), g('food-moong-dal', jitter(150, 20)), g('food-peanuts', 20)],
+  () => [g('food-dosa', 160), g('food-dal', 120), g('food-curd', 150)],
+  () => [g('food-muesli', jitter(45, 8)), g('food-milk', 250), g('food-apple', 180)],
+];
+const LUNCHES: (() => MealItem[])[] = [
+  () => [g('food-rice', jitter(250, 30)), g('food-dal', 150), g('food-chicken', jitter(180, 25))],
+  () => [g('food-brown-rice', jitter(200, 25)), g('food-rajma', 150), g('food-curd', 150)],
+  () => [g('food-rice', jitter(200, 25)), g('food-chole', 150), g('food-paneer', jitter(70, 15))],
+  () => [g('food-rice', jitter(200, 25)), g('food-fish-rohu', jitter(150, 20)), g('food-moong-dal', 150)],
+];
+const DINNERS: (() => MealItem[])[] = [
+  () => [g('food-roti', 160), g('food-paneer', jitter(80, 15)), g('food-curd', 150)],
+  () => [g('food-roti', 120), g('food-soya-chunks', jitter(40, 8)), g('food-sweet-potato', jitter(150, 20))],
+  () => [g('food-rice', 150), g('food-chicken-thigh', jitter(150, 20)), g('food-dal', 150)],
+  () => [g('food-roti', 160), g('food-rajma', 150), g('food-tofu', jitter(100, 20))],
+];
+const POSTWORKOUTS: (() => MealItem[])[] = [
+  () => [g('food-whey', 30), g('food-dry-fruits', jitter(35, 8))],
+  () => [g('food-whey', 30), g('food-banana', 120)],
+];
+const SNACKS: (() => MealItem[])[] = [
+  () => [g('food-banana', 120), g('food-sattu', jitter(30, 6))],
+  () => [g('food-greek-yogurt', 150), g('food-almonds', 30)],
+  () => [g('food-peanuts', 30), g('food-apple', 180)],
+];
+
 function mealsForDay(): MealItem[][] {
-  const g = (foodId: string, grams: number): MealItem => ({ foodId, grams: Math.round(grams) });
-  // Tuned to land near a ~2750 kcal / ~120 g protein gaining target (jittered).
-  return [
-    [g('food-oats', jitter(70, 8)), g('food-milk', 250), g('food-banana', 120), g('food-peanut-butter', 24)],
-    [g('food-rice', jitter(250, 30)), g('food-dal', 150), g('food-chicken', jitter(180, 25))],
-    [g('food-roti', 160), g('food-paneer', jitter(80, 15)), g('food-curd', 150)],
-    [g('food-whey', 30), g('food-dry-fruits', jitter(35, 8))],
-    [g('food-banana', 120), g('food-sattu', jitter(30, 6))],
-  ];
+  return [pick(BREAKFASTS)(), pick(LUNCHES)(), pick(DINNERS)(), pick(POSTWORKOUTS)(), pick(SNACKS)()];
 }
 
 const MEAL_CATEGORIES = ['breakfast', 'lunch', 'dinner', 'postWorkout', 'snack'] as const;

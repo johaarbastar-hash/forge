@@ -19,8 +19,9 @@ afterEach(() => {
 
 describe('favorite meals (schema v2)', () => {
   it('saves and lists named combos', async () => {
+    const seededCount = (await allFavoriteMeals()).length; // 6 shipped combos
     await addFavoriteMeal({
-      name: 'Post-workout shake',
+      name: 'My shake',
       category: 'postWorkout',
       items: [
         { foodId: 'food-whey', grams: 30 },
@@ -28,9 +29,9 @@ describe('favorite meals (schema v2)', () => {
       ],
     });
     const favs = await allFavoriteMeals();
-    expect(favs).toHaveLength(1);
-    expect(favs[0]?.name).toBe('Post-workout shake');
-    expect(favs[0]?.items).toHaveLength(2);
+    expect(favs).toHaveLength(seededCount + 1);
+    const mine = favs.find((f) => f.name === 'My shake');
+    expect(mine?.items).toHaveLength(2);
   });
 });
 
