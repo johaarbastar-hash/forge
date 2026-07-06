@@ -19,7 +19,11 @@
     @apply font-display tabular-nums;
   }
   .glass {
-    @apply border-white/10 bg-white/5 backdrop-blur-xl;
+    /* Solid, near-opaque dark panel instead of backdrop-filter blur: keeps the
+       floating-panel look but avoids GPU compositing corruption seen on some
+       Android devices (notably Samsung) where backdrop-blur renders as garbage. */
+    @apply border-white/10;
+    background-color: rgba(26, 26, 31, 0.94);
   }
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);

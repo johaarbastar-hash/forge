@@ -53,7 +53,7 @@ export function CelebrationOverlay() {
           type="button"
           onClick={dismiss}
           aria-label="Dismiss"
-          className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/80 px-8 backdrop-blur-sm"
+          className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/90 px-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
