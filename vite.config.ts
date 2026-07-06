@@ -16,7 +16,8 @@ export default defineConfig({
         background_color: '#09090B',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
+        // Relative so the app launches at the host sub-path (e.g. /forge/) not domain root.
+        start_url: '.',
         icons: [
           { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },

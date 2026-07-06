@@ -1,11 +1,13 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createHashRouter } from 'react-router-dom';
 
 import { ToastProvider } from '../components/Toast';
 import { AppShell } from './AppShell';
 import { ErrorBoundary, ErrorFallback } from './ErrorBoundary';
 import { RedirectIfOnboarded, RequireOnboarded } from './guards';
 
-const router = createBrowserRouter([
+// Hash routing keeps the app working under any host sub-path (e.g. GitHub
+// Pages' /forge/) with no server-side SPA fallback needed.
+const router = createHashRouter([
   {
     path: '/onboarding',
     element: <RedirectIfOnboarded />,
