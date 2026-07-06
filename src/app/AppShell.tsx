@@ -19,14 +19,14 @@ export function AppShell() {
   useGamification();
   useReminders();
   return (
-    <div className="mx-auto min-h-dvh w-full max-w-lg">
-      <main className="px-4 pb-36 pt-6">
+    <div className="relative mx-auto flex h-dvh w-full max-w-lg flex-col overflow-hidden">
+      <main className="flex-1 overflow-y-auto px-4 pb-24 pt-6">
         <Suspense fallback={<RouteLoading />}>
           <Outlet />
         </Suspense>
       </main>
-      <QuickAdd />
       <TabBar />
+      <QuickAdd />
       <CelebrationOverlay />
     </div>
   );

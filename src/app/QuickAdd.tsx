@@ -55,9 +55,9 @@ export function QuickAdd() {
         onClick={() => setChooserOpen(true)}
         whileTap={reducedMotion ? undefined : { scale: 0.92 }}
         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-        className="glass fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full border text-text shadow-lg shadow-black/50"
+        className="absolute bottom-20 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 text-text shadow-md shadow-black/40"
       >
-        <span className="absolute inset-0 rounded-full bg-ember opacity-90" aria-hidden />
+        <span className="absolute inset-0 rounded-full bg-ember" aria-hidden />
         <span className="relative">
           <IconPlus size={26} strokeWidth={2.2} />
         </span>

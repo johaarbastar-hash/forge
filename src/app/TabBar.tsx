@@ -26,8 +26,8 @@ const tabs: Tab[] = [
 
 export function TabBar() {
   return (
-    <nav aria-label="Primary" className="glass fixed inset-x-0 bottom-0 z-30 border-t pb-safe">
-      <div className="mx-auto flex h-16 max-w-lg items-stretch">
+    <nav aria-label="Primary" className="glass z-30 shrink-0 border-t pb-safe">
+      <div className="flex h-16 items-stretch">
         {tabs.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}

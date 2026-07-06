@@ -5,12 +5,19 @@
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    height: 100%;
   }
   body {
     @apply bg-bg font-sans text-text antialiased;
+    /* The app shell owns scrolling internally; the document itself never
+       scrolls. This avoids pinned (position:fixed) bars re-compositing over a
+       scrolling page, which corrupts rendering on some Android GPUs (Mali). */
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
   }
   #root {
-    min-height: 100dvh;
+    height: 100%;
   }
 }
 
@@ -19,11 +26,12 @@
     @apply font-display tabular-nums;
   }
   .glass {
-    /* Solid, near-opaque dark panel instead of backdrop-filter blur: keeps the
-       floating-panel look but avoids GPU compositing corruption seen on some
-       Android devices (notably Samsung) where backdrop-blur renders as garbage. */
+    /* Fully OPAQUE solid dark panel (no transparency, no backdrop-filter). A
+       see-through pinned panel forces the GPU to blend it against scrolling
+       content every frame, which corrupts rendering on Mali GPUs (Samsung).
+       Solid = nothing to blend. */
     @apply border-white/10;
-    background-color: rgba(26, 26, 31, 0.94);
+    background-color: #17171b;
   }
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
