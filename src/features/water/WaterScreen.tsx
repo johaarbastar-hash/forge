@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 import { Card } from '../../components/Card';
 import { ScreenHeader } from '../../components/ScreenHeader';
@@ -7,10 +7,11 @@ import { getGoals } from '../../db/repositories/goalsRepo';
 import { waterLogsByDay, waterTotalsByDays } from '../../db/repositories/waterRepo';
 import { lastNDayKeys, todayKey } from '../../lib/dates';
 import { trackedAverage } from '../../lib/analytics';
+import { useAppReducedMotion } from '../../stores/motionPref';
 import { WaterQuickPanel } from './WaterQuickPanel';
 
 function BottleFill({ fraction }: { fraction: number }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const clamped = Math.max(0, Math.min(1, fraction));
   // Bottle inner region: y from 20 (top) to 150 (bottom), height 130.
   const innerTop = 20;
@@ -51,7 +52,7 @@ function BottleFill({ fraction }: { fraction: number }) {
 }
 
 export function WaterScreen() {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const today = todayKey();
   const data = useLiveQuery(async () => {
     const [logs, goals, week, month] = await Promise.all([

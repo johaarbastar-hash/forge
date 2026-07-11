@@ -1,7 +1,8 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
+import { useAppReducedMotion } from '../stores/motionPref';
 import { IconCheck, IconClose } from './icons';
 
 export type ToastKind = 'success' | 'error' | 'info';
@@ -25,7 +26,7 @@ const AUTO_DISMISS_MS = 3200;
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const nextId = useRef(1);
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
 
   const dismiss = useCallback((id: number) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -53,10 +54,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           {toasts.map((toast) => (
             <motion.div
               key={toast.id}
-              initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -12, scale: 0.97 }}
+              initial={reducedMotion ? false : { opacity: 0, y: -12, scale: 0.97 }}
               animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: reducedMotion ? 0.1 : 0.2, ease: 'easeOut' }}
+              transition={{ duration: reducedMotion ? 0 : 0.2, ease: 'easeOut' }}
               className="pointer-events-auto flex w-full max-w-sm items-center gap-2 rounded-control border bg-surface-2 px-3 py-2.5 shadow-lg shadow-black/40"
             >
               <span

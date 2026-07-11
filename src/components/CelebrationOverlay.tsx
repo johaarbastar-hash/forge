@@ -1,8 +1,9 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
 
 import { achievementDefs } from '../data/achievements';
 import { useCelebrations } from '../stores/celebrations';
+import { useAppReducedMotion } from '../stores/motionPref';
 import { IconFlame, IconTrophy } from './icons';
 
 const AUTO_DISMISS_MS = 4200;
@@ -35,7 +36,7 @@ function EmberBurst({ reduced }: { reduced: boolean }) {
 export function CelebrationOverlay() {
   const current = useCelebrations((s) => s.queue[0]);
   const dismiss = useCelebrations((s) => s.dismiss);
-  const reduced = useReducedMotion() ?? false;
+  const reduced = useAppReducedMotion();
 
   useEffect(() => {
     if (!current) return;
@@ -54,10 +55,10 @@ export function CelebrationOverlay() {
           onClick={dismiss}
           aria-label="Dismiss"
           className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/90 px-8"
-          initial={{ opacity: 0 }}
+          initial={reduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: reduced ? 0.1 : 0.2 }}
+          transition={{ duration: reduced ? 0 : 0.2 }}
         >
           {current.kind === 'level' ? (
             <div className="relative flex flex-col items-center gap-4">
@@ -66,7 +67,7 @@ export function CelebrationOverlay() {
                 className="flex h-28 w-28 items-center justify-center rounded-full bg-ember text-text shadow-2xl shadow-accent/40"
                 initial={reduced ? { opacity: 0 } : { scale: 0.3, rotate: -20 }}
                 animate={reduced ? { opacity: 1 } : { scale: 1, rotate: 0 }}
-                transition={reduced ? { duration: 0.15 } : { type: 'spring', stiffness: 260, damping: 16 }}
+                transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 16 }}
               >
                 <IconFlame size={52} />
               </motion.div>
@@ -80,7 +81,7 @@ export function CelebrationOverlay() {
               className="flex w-full max-w-xs flex-col items-center gap-3 rounded-card border bg-surface p-6 text-center shadow-2xl shadow-ember/20"
               initial={reduced ? { opacity: 0 } : { rotateY: 90, opacity: 0 }}
               animate={reduced ? { opacity: 1 } : { rotateY: 0, opacity: 1 }}
-              transition={reduced ? { duration: 0.15 } : { type: 'spring', stiffness: 200, damping: 18 }}
+              transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 200, damping: 18 }}
             >
               <span className="flex h-16 w-16 items-center justify-center rounded-full bg-ember text-text">
                 <IconTrophy size={30} />

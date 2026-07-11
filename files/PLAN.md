@@ -162,6 +162,7 @@ _Append one line per judgment call: date — decision — reason._
 - 2026-07-05 — Search date parsing (`lib/dateParse.ts`) accepts ISO + "12 Jul"/"Jul 12"/"12 July 2026"; a date result deep-links to `/more/calendar?day=…` which opens that day.
 - 2026-07-05 — Export: CSV per data type + full JSON dump download via Blob/anchor; printable report = the Analytics monthly view with `@media print` CSS dropping app chrome. Install prompt captured via `beforeinstallprompt`; Wipe all data double-confirms then deletes the DB + localStorage and reloads.
 - 2026-07-05 — App version bumped to v1.0.0 in Settings for the final release.
+- 2026-07-06 — Mali GPU mitigation (Samsung A22 scroll corruption), lever 3: app-wide animation kill-switch. New `stores/motionPref.ts` detects flaky GPUs via the WebGL renderer string (/mali/i) and defaults animations OFF there; Settings → Display exposes a persisted "Reduce animations" toggle (localStorage — trivial UI pref, allowed). All animated components now read `useAppReducedMotion()` (toggle OR OS prefers-reduced-motion) instead of framer's hook, and every reduced path is fully instant (duration 0, initial=false) so no composited transform/opacity layers exist over scroll content. Prior levers (opaque panels, internal-scroll shell) kept.
 
 ## DoD verification (fill in Phase 8)
 

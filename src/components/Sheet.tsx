@@ -1,7 +1,8 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 
+import { useAppReducedMotion } from '../stores/motionPref';
 import { IconClose } from './icons';
 
 type SheetProps = {
@@ -13,7 +14,7 @@ type SheetProps = {
 
 /** Bottom sheet with glass treatment. Doubles as the app's modal primitive. */
 export function Sheet({ open, onClose, title, children }: SheetProps) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
 
   useEffect(() => {
     if (!open) return;
@@ -33,7 +34,7 @@ export function Sheet({ open, onClose, title, children }: SheetProps) {
             aria-label="Close"
             className="absolute inset-0 bg-black/60"
             onClick={onClose}
-            initial={{ opacity: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: reducedMotion ? 0 : 0.15, ease: 'easeOut' }}
@@ -43,13 +44,11 @@ export function Sheet({ open, onClose, title, children }: SheetProps) {
             aria-modal="true"
             aria-label={title}
             className="glass relative w-full max-w-lg rounded-t-card border-t px-4 pb-6 pt-3 pb-safe"
-            initial={reducedMotion ? { opacity: 0 } : { y: '100%' }}
+            initial={reducedMotion ? false : { y: '100%' }}
             animate={reducedMotion ? { opacity: 1 } : { y: 0 }}
             exit={reducedMotion ? { opacity: 0 } : { y: '100%' }}
             transition={
-              reducedMotion
-                ? { duration: 0.1 }
-                : { type: 'spring', stiffness: 380, damping: 34 }
+              reducedMotion ? { duration: 0 } : { type: 'spring', stiffness: 380, damping: 34 }
             }
           >
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/20" />

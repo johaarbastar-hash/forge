@@ -9,6 +9,7 @@ import { IconFlame } from '../../components/icons';
 import { db } from '../../db/db';
 import { loadDemoData } from '../../db/demoData';
 import { getSettings, updateSettings } from '../../db/repositories/settingsRepo';
+import { useMotionPref } from '../../stores/motionPref';
 import type { ReminderConfig, ReminderType } from '../../types';
 import { useInstallPrompt } from '../../app/useInstallPrompt';
 
@@ -42,6 +43,8 @@ function Toggle({ on, onChange, label }: { on: boolean; onChange: (v: boolean) =
 export function SettingsScreen() {
   const { showToast } = useToast();
   const settings = useLiveQuery(() => getSettings(), []);
+  const reduceMotion = useMotionPref((s) => s.reduceMotion);
+  const setReduceMotion = useMotionPref((s) => s.setReduceMotion);
   const { promptInstall, installed } = useInstallPrompt();
   const [busy, setBusy] = useState<string | null>(null);
   const [wipeArm, setWipeArm] = useState(false);
@@ -95,6 +98,21 @@ export function SettingsScreen() {
           <span className="block font-display text-base font-semibold">Forge</span>
           <span className="block text-xs text-muted">Build Yourself. · v1.0.0 · offline-first</span>
         </span>
+      </Card>
+
+      {/* Display */}
+      <Card className="flex flex-col gap-3">
+        <p className="text-xs font-medium uppercase tracking-wide text-muted">Display</p>
+        <div className="flex items-center gap-3">
+          <span className="flex-1">
+            <span className="block text-sm">Reduce animations</span>
+            <span className="block text-xs text-muted">
+              Skips slide and fade effects. Turn on if you see flickering or glitchy pixels — some
+              phone graphics chips misdraw animated panels.
+            </span>
+          </span>
+          <Toggle on={reduceMotion} onChange={setReduceMotion} label="Reduce animations" />
+        </div>
       </Card>
 
       {/* Reminders */}

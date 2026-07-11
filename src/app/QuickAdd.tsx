@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { Sheet } from '../components/Sheet';
 import { IconDrop, IconDumbbell, IconPlus, IconScale, IconUtensils } from '../components/icons';
 import { recentFoodIds } from '../db/repositories/mealsRepo';
 import { todayKey } from '../lib/dates';
+import { useAppReducedMotion } from '../stores/motionPref';
 import { MealBuilderSheet } from '../features/nutrition/MealBuilderSheet';
 import { WaterQuickPanel } from '../features/water/WaterQuickPanel';
 import { WeightQuickPanel } from '../features/weight/WeightQuickPanel';
@@ -33,7 +34,7 @@ export function QuickAdd() {
   const [chooserOpen, setChooserOpen] = useState(false);
   const [active, setActive] = useState<Exclude<ActionKey, 'workout'> | null>(null);
   const navigate = useNavigate();
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const today = todayKey();
   const hasRecents = useLiveQuery(async () => (await recentFoodIds(1)).length > 0, []) ?? false;
 

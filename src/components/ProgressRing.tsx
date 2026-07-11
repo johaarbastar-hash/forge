@@ -1,6 +1,8 @@
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useId } from 'react';
 import type { ReactNode } from 'react';
+
+import { useAppReducedMotion } from '../stores/motionPref';
 
 type ProgressRingProps = {
   /** Progress 0–1; values beyond 1 render as a full ring. */
@@ -23,7 +25,7 @@ export function ProgressRing({
   children,
   'aria-label': ariaLabel,
 }: ProgressRingProps) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useAppReducedMotion();
   const gradientId = useId();
   const clamped = Math.max(0, Math.min(1, value));
   const radius = (size - strokeWidth) / 2;
